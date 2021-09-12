@@ -1,0 +1,11 @@
+[Unit]
+Description=API-Gateway Auth_proxy Deamon
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/opt/api-gateway/bin/auth_proxy --conf=/opt/api-gateway/conf/auth_proxy.json  
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
