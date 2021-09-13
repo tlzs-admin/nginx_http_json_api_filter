@@ -73,13 +73,13 @@ static char * json_api_filter(ngx_conf_t * cf, ngx_command_t * cmd, void * user_
 /************************************************************************
  * ngx module callbacks
 ************************************************************************/
-static ngx_int_t on_module_init_master(ngx_log_t * log);
-static ngx_int_t on_module_init_module(ngx_cycle_t * cycle);
-static ngx_int_t on_module_init_process(ngx_cycle_t * cycle);
-static ngx_int_t on_module_init_thread(ngx_cycle_t * cycle);
-static void      on_module_exit_thread(ngx_cycle_t * cycle);
-static void      on_module_exit_process(ngx_cycle_t * cycle);
-static void      on_module_exit_master(ngx_cycle_t * cycle);
+//~ static ngx_int_t on_module_init_master(ngx_log_t * log);
+//~ static ngx_int_t on_module_init_module(ngx_cycle_t * cycle);
+//~ static ngx_int_t on_module_init_process(ngx_cycle_t * cycle);
+//~ static ngx_int_t on_module_init_thread(ngx_cycle_t * cycle);
+//~ static void      on_module_exit_thread(ngx_cycle_t * cycle);
+//~ static void      on_module_exit_process(ngx_cycle_t * cycle);
+//~ static void      on_module_exit_master(ngx_cycle_t * cycle);
 
 /************************************************************************
  * ngx module callbacks
@@ -123,14 +123,15 @@ ngx_module_t ngx_http_json_api_filter_module = {
 	.commands = s_module_commands,
 	.type = NGX_HTTP_MODULE,
 	
-	.init_master  = on_module_init_master,
-	.init_module  = on_module_init_module,
-	.init_process = on_module_init_process,
-	.init_thread  = on_module_init_thread,
-	.exit_thread  = on_module_exit_thread,
-	.exit_process = on_module_exit_process,
-	.exit_master  = on_module_exit_master,
-	NGX_MODULE_V1_PADDING
+	
+	//~ .init_master  = on_module_init_master,
+	//~ .init_module  = on_module_init_module,
+	//~ .init_process = on_module_init_process,
+	//~ .init_thread  = on_module_init_thread,
+	//~ .exit_thread  = on_module_exit_thread,
+	//~ .exit_process = on_module_exit_process,
+	//~ .exit_master  = on_module_exit_master,
+	//~ NGX_MODULE_V1_PADDING
 };
 
 
@@ -174,41 +175,41 @@ static char * json_api_filter(ngx_conf_t * cf, ngx_command_t * cmd, void * user_
 /************************************************************************
  * ngx module callbacks
 ************************************************************************/
-static ngx_int_t on_module_init_master(ngx_log_t * log)
-{
-	debug_printf("%s()", __FUNCTION__);
-	return NGX_OK;
-}
-static ngx_int_t on_module_init_module(ngx_cycle_t * cycle)
-{
-	debug_printf("%s(cycle=%p)", __FUNCTION__, cycle);
-	return NGX_OK;
-}
-static ngx_int_t on_module_init_process(ngx_cycle_t * cycle)
-{
-	debug_printf("%s(cycle=%p)", __FUNCTION__, cycle);
-	return NGX_OK;
-}
-static ngx_int_t on_module_init_thread(ngx_cycle_t * cycle)
-{
-	debug_printf("%s(cycle=%p)", __FUNCTION__, cycle);
-	return NGX_OK;
-}
-static void      on_module_exit_thread(ngx_cycle_t * cycle)
-{
-	debug_printf("%s(cycle=%p)", __FUNCTION__, cycle);
-	return;
-}
-static void      on_module_exit_process(ngx_cycle_t * cycle)
-{
-	debug_printf("%s(cycle=%p)", __FUNCTION__, cycle);
-	return;
-}
-static void      on_module_exit_master(ngx_cycle_t * cycle)
-{
-	debug_printf("%s(cycle=%p)", __FUNCTION__, cycle);
-	return;
-}
+//~ static ngx_int_t on_module_init_master(ngx_log_t * log)
+//~ {
+	//~ debug_printf("%s()", __FUNCTION__);
+	//~ return NGX_OK;
+//~ }
+//~ static ngx_int_t on_module_init_module(ngx_cycle_t * cycle)
+//~ {
+	//~ debug_printf("%s(cycle=%p)", __FUNCTION__, cycle);
+	//~ return NGX_OK;
+//~ }
+//~ static ngx_int_t on_module_init_process(ngx_cycle_t * cycle)
+//~ {
+	//~ debug_printf("%s(cycle=%p)", __FUNCTION__, cycle);
+	//~ return NGX_OK;
+//~ }
+//~ static ngx_int_t on_module_init_thread(ngx_cycle_t * cycle)
+//~ {
+	//~ debug_printf("%s(cycle=%p)", __FUNCTION__, cycle);
+	//~ return NGX_OK;
+//~ }
+//~ static void      on_module_exit_thread(ngx_cycle_t * cycle)
+//~ {
+	//~ debug_printf("%s(cycle=%p)", __FUNCTION__, cycle);
+	//~ return;
+//~ }
+//~ static void      on_module_exit_process(ngx_cycle_t * cycle)
+//~ {
+	//~ debug_printf("%s(cycle=%p)", __FUNCTION__, cycle);
+	//~ return;
+//~ }
+//~ static void      on_module_exit_master(ngx_cycle_t * cycle)
+//~ {
+	//~ debug_printf("%s(cycle=%p)", __FUNCTION__, cycle);
+	//~ return;
+//~ }
 
 
 /************************************************************************
@@ -320,6 +321,8 @@ static json_api_filter_context_t * json_api_filter_context_new(ngx_http_request_
 		subrequest->header_only = 1;
 		ctx->auth.subrequest = subrequest;
 		ngx_http_set_ctx(request, ctx, ngx_http_json_api_filter_module);
+		
+		debug_printf("%s(): ctx=%p", __FUNCTION__, ctx);
 		return ctx;
 	}
 
@@ -336,6 +339,8 @@ static ngx_int_t on_auth_verify_final(ngx_http_request_t * request, void * user_
 	json_api_filter_context_t * ctx = user_data;
 	ngx_log_debug2(NGX_LOG_DEBUG_HTTP, request->connection->log, 0, "%s():status=%d", 
 		__FUNCTION__, request->headers_out.status);
+		
+	debug_printf("%s():status=%d", __FUNCTION__, (int)request->headers_out.status);
 	
 	ctx->auth.done = 1;
 	ctx->auth.status = request->headers_out.status;
@@ -344,10 +349,14 @@ static ngx_int_t on_auth_verify_final(ngx_http_request_t * request, void * user_
 
 static ngx_int_t auth_verify(json_api_filter_context_t * ctx)
 {
+	debug_printf("%s(%p): done=%d\n", __FUNCTION__, ctx, (int)ctx->auth.done);
 	if(!ctx->auth.done) return NGX_AGAIN;
 	
 	ngx_http_request_t * request = ctx->request; 
 	ngx_int_t status = ctx->auth.status;
+	
+	debug_printf("auth_verify::status=%ld\n", (long)status);
+	
 	if(status >= NGX_HTTP_OK && status < NGX_HTTP_SPECIAL_RESPONSE) return NGX_OK;
 	
 	switch(status) {
@@ -389,7 +398,16 @@ static ngx_int_t upstream_filter(json_api_filter_context_t * ctx)
 **/
 static ngx_int_t verify_jwt_token(ngx_http_request_t * request)
 {
-	debug_printf("%s(request=%p)", __FUNCTION__, request); 
+	struct json_api_filter_conf * conf = ngx_http_get_module_loc_conf(request, ngx_http_json_api_filter_module);
+	debug_printf("%s(request=%p): conf=%p(uri=%s, len=%d)\n", __FUNCTION__, request, 
+		conf, 
+		(char *)conf->uri.data,
+		(int)conf->uri.len
+		); 
+	if(NULL == conf) return NGX_ERROR;
+	if(conf->uri.len == 0) return NGX_DECLINED;
+	
+	ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0, "%s()", __FUNCTION__);
 	
 	ngx_int_t ret = NGX_OK;
 	json_api_filter_context_t * ctx = ngx_http_get_module_ctx(request, ngx_http_json_api_filter_module);
@@ -398,11 +416,13 @@ static ngx_int_t verify_jwt_token(ngx_http_request_t * request)
 		ctx = json_api_filter_context_new(request, NULL);
 		if(NULL == ctx) return NGX_ERROR;
 		
-		fprintf(stderr, "NGX_AGAIN\n");
-		return NGX_EAGAIN;
+		debug_printf("json_api_filter_context_new()=%p; ==> NGX_AGAIN\n", ctx);
+		
 	}
 	
 	ret = ctx->auth.verify(ctx);
+	fprintf(stderr, "auth.verify()=%d\n", (int)ret);
+	
 	if(ret != NGX_OK) return ret;
 	
 	ret = ctx->upstream.filter(ctx);

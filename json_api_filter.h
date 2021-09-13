@@ -11,7 +11,7 @@ extern "C" {
 
 #ifdef _DEBUG
 #define debug_printf(fmt, ...) do { \
-		fprintf(stderr, "%s(%d)::" fmt "\n", __FILE__, __LINE__, ##__VA_ARGS__); \
+		fprintf(stderr, "[JSON_API_FILTER](%d)::" fmt "\n", __LINE__, ##__VA_ARGS__); \
 } while(0)
 #else
 #define debug_printf(fmt, ...) do { } while(0)
